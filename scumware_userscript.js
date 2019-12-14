@@ -3,7 +3,7 @@
 // @match    *://www.scumware.org/report/*
 // @match    *://*.scumware.org/search.php
 // @name    Scumware report download
-// @version    0.1.0
+// @version    0.1.1
 // ==/UserScript==
 
 /* 5 second wait for page to load and deobfuscate URLs
@@ -13,18 +13,26 @@ setTimeout(function() {
     var getData = confirm("Scumware userscript here: do you want to save the data for this report?");
 
     if (getData) {
-        reportObjects = scumwareReportData();
-        objectsJson = JSON.stringify(reportObjects, null, 2);
+        // template for report data including link
+        var reportData = {
+            indicator: "",
+            scumware_link: "https://www.scumware.org/report/",
+            urls: []
+        };
+
+        reportData.report_link = window.location.href;
+        reportData.indicator = window.location.pathname.replace("/report/", "");
+        reportData.urls = scumwareReportData();
+        reportJson = JSON.stringify(reportData, null, 2);
 
         // JSON dump report url data to file
         // https://stackoverflow.com/questions/34101871/save-data-using-greasemonkey-tampermonkey-for-later-retrieval
         var a = document.createElement("a");
 
         // need encodeURIComponent to include json newlines properly
-        a.href = "data:text/json;charset=utf-8," + encodeURIComponent(objectsJson);
+        a.href = "data:text/json;charset=utf-8," + encodeURIComponent(reportJson);
 
-        indicator = window.location.pathname.replace("/report/", "");
-        a.download = indicator + "_scumware_urls.json";
+        a.download = reportData.indicator + "_scumware_urls.json";
         a.click();
     } else
         return
