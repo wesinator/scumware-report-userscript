@@ -40,8 +40,8 @@ setTimeout(function() {
 
 function scumwareReportData() {
     // scumware table struct
-    var scumwareReportTable = document.getElementsByClassName("wider")[0];
-    var scumwareReportUrls = scumwareReportTable.children[1].children;
+    var scumwareReportTable = document.getElementsByClassName("wider")[0]; // table
+    var scumwareReportUrls = scumwareReportTable.children[1].children; // children of tbody
 
     var urlObjects = [];
 
