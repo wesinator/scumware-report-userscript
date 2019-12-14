@@ -3,26 +3,26 @@
 // @match    *://www.scumware.org/report/*
 // @match    *://*.scumware.org/search.php
 // @name    Scumware report download
-// @version    0.1.1
+// @version    1.0.0
 // ==/UserScript==
 
 /* 5 second wait for page to load and deobfuscate URLs
 (Scumware obfuscates the URLs on static page to prevent scraping)
 */
 setTimeout(function() {
-    var getData = confirm("Scumware userscript here: do you want to save the data for this report?");
+    // template for report data including link
+    var reportData = {
+        indicator: "",
+        scumware_link: "https://www.scumware.org/report/",
+        urls: []
+    };
 
-    if (getData) {
-        // template for report data including link
-        var reportData = {
-            indicator: "",
-            scumware_link: "https://www.scumware.org/report/",
-            urls: []
-        };
+    reportData.report_link = window.location.href;
+    reportData.indicator = window.location.pathname.replace("/report/", "");
+    reportData.urls = scumwareReportData();
 
-        reportData.report_link = window.location.href;
-        reportData.indicator = window.location.pathname.replace("/report/", "");
-        reportData.urls = scumwareReportData();
+    var downloadData = confirm("Scumware userscript here: do you want to save the data for this report?");
+    if (downloadData) {
         reportJson = JSON.stringify(reportData, null, 2);
 
         // JSON dump report url data to file
@@ -34,7 +34,8 @@ setTimeout(function() {
 
         a.download = reportData.indicator + "_scumware_urls.json";
         a.click();
-    } else
+    }
+    else
         return
 }, 5000);
 
@@ -78,9 +79,11 @@ function scumwareReportData() {
                         break;
                     case 2:
                         urlObject.md5 = text;
+                        addLink(urlEntry[i], text);
                         break;
                     case 3:
                         urlObject.ip = text;
+                        addLink(urlEntry[i], text);
                         break;
                     case 4:
                         urlObject.country = text;
@@ -99,4 +102,9 @@ function scumwareReportData() {
 
     //console.log(urlObjects)
     return urlObjects;
+}
+
+// add missing links for pivot to other reports
+function addLink(element, text) {
+    return element.innerHTML = "<a href=\"https://www.scumware.org/report/" + text + "\" target=_blank>" + text + "</a>";
 }
