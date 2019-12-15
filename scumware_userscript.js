@@ -25,6 +25,9 @@ setTimeout(function() {
     if (downloadData) {
         reportJson = JSON.stringify(reportData, null, 2);
 
+        // Get date UTC
+        var utcDate = new Date().toJSON().slice(0,10);
+
         // JSON dump report url data to file
         // https://stackoverflow.com/questions/34101871/save-data-using-greasemonkey-tampermonkey-for-later-retrieval
         var a = document.createElement("a");
@@ -32,7 +35,7 @@ setTimeout(function() {
         // need encodeURIComponent to include json newlines properly
         a.href = "data:text/json;charset=utf-8," + encodeURIComponent(reportJson);
 
-        a.download = reportData.indicator + "_scumware_urls.json";
+        a.download = reportData.indicator + "_scumware_urls_generated_" + utcDate + ".json";
         a.click();
     }
     else
