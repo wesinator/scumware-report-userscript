@@ -17,7 +17,7 @@ setTimeout(function() {
         urls: []
     };
 
-    reportData.report_link = window.location.href;
+    reportData.scumware_link = window.location.href;
     reportData.indicator = window.location.pathname.replace("/report/", "");
     reportData.urls = scumwareReportData();
 
