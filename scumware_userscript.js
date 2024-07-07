@@ -3,7 +3,7 @@
 // @match    *://www.scumware.org/report/*
 // @match    *://*.scumware.org/search.php
 // @name    Scumware report download
-// @version    1.0.0
+// @version    1.0.1
 // ==/UserScript==
 
 /* 5 second wait for page to load and deobfuscate URLs
