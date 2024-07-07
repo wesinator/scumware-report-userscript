@@ -36,7 +36,7 @@ setTimeout(function() {
         // need encodeURIComponent to include json newlines properly
         a.href = "data:text/json;charset=utf-8," + encodeURIComponent(reportJson);
 
-        a.download = reportData.indicator ?? `search_${reportData.urls[0].ip}_${reportData.urls[0].md5}`  + "_scumware_urls_generated_" + utcDate + ".json";
+        a.download = (reportData.indicator ?? `search_${reportData.urls[0].ip}_${reportData.urls[0].md5}`)  + "_scumware_urls_generated_" + utcDate + ".json";
         a.click();
     }
     else
