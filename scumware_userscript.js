@@ -3,7 +3,7 @@
 // @match    *://www.scumware.org/report/*
 // @match    *://*.scumware.org/search.php
 // @name    Scumware report download
-// @version    1.0.1
+// @version    2.0.0
 // ==/UserScript==
 
 /* 5 second wait for page to load and deobfuscate URLs
@@ -23,8 +23,26 @@ setTimeout(function() {
         var bs = document.getElementsByTagName('b');
 
         // parsing indicator from here and not window.location to avoid .html extension in URL (some site links add .html)
-        reportData.indicator = bs[1].nextSibling.innerText.trim();
+        reportData.indicator = {value: bs[1].nextSibling.innerText.trim(), type: bs[1].innerText.toLowerCase()};
 
+        // add additional sections if present
+        for (val of bs) {
+            try {
+                label = val.innerText.toLowerCase()
+                next_text = val.nextSibling.innerText.trim();
+                if (label == "file size")
+                    reportData.indicator.file_size = next_text;
+                else if (label == "country")
+                    reportData.indicator.ip_country_name = val.children[0].innerText.trim();
+                else if (label == "network")
+                    reportData.indicator.ip_network = next_text;
+                else if (label == "as")
+                    // ignore if listed as AS 0
+                    if (next_text != 0)
+                        reportData.indicator.ip_as = next_text;
+            }
+            catch {}; 
+        }
     }
     reportData.urls = scumwareReportData();
 
@@ -42,7 +60,7 @@ setTimeout(function() {
         // need encodeURIComponent to include json newlines properly
         a.href = "data:text/json;charset=utf-8," + encodeURIComponent(reportJson);
 
-        a.download = (reportData.indicator ?? `search_${reportData.urls[0].ip}_${reportData.urls[0].md5}`)  + "_scumware_urls_generated_" + utcDate + ".json";
+        a.download = (reportData.indicator.value ?? `search_${reportData.urls[0].ip}_${reportData.urls[0].md5}`)  + "_scumware_urls_generated_" + utcDate + ".json";
         a.click();
     }
     else
