@@ -18,7 +18,13 @@ setTimeout(function() {
     // Search results from /search.php will not have link/indicator. There is no easy way to get the search query value either.
     if (window.location.pathname != "/search.php") {
         reportData.scumware_link = window.location.href;
-        reportData.indicator = window.location.pathname.replace("/report/", "");
+
+        // handle additional 'indicator' data in bold
+        var bs = document.getElementsByTagName('b');
+
+        // parsing indicator from here and not window.location to avoid .html extension in URL (some site links add .html)
+        reportData.indicator = bs[1].nextSibling.innerText.trim();
+
     }
     reportData.urls = scumwareReportData();
 
