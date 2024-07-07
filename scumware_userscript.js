@@ -10,15 +10,16 @@
 (Scumware obfuscates the URLs on static page to prevent scraping)
 */
 setTimeout(function() {
-    // template for report data including link
     var reportData = {
-        indicator: "",
-        scumware_link: "https://www.scumware.org/report/",
+        // report will have url at a minimum. may have several URLs
         urls: []
     };
 
-    reportData.scumware_link = window.location.href;
-    reportData.indicator = window.location.pathname.replace("/report/", "");
+    // Search results from /search.php will not have link/indicator. There is no easy way to get the search query value either.
+    if (window.location.pathname != "/search.php") {
+        reportData.scumware_link = window.location.href;
+        reportData.indicator = window.location.pathname.replace("/report/", "");
+    }
     reportData.urls = scumwareReportData();
 
     var downloadData = confirm("Scumware userscript here: do you want to save the data for this report?");
@@ -35,7 +36,7 @@ setTimeout(function() {
         // need encodeURIComponent to include json newlines properly
         a.href = "data:text/json;charset=utf-8," + encodeURIComponent(reportJson);
 
-        a.download = reportData.indicator + "_scumware_urls_generated_" + utcDate + ".json";
+        a.download = reportData.indicator ?? `search_${reportData.urls[0].ip}_${reportData.urls[0].md5}`  + "_scumware_urls_generated_" + utcDate + ".json";
         a.click();
     }
     else
