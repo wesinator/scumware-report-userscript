@@ -10,10 +10,8 @@
 (Scumware obfuscates the URLs on static page to prevent scraping)
 */
 setTimeout(function() {
-    var reportData = {
-        // report will have url at a minimum. may have several URLs
-        urls: []
-    };
+  	// report will have url at a minimum. may have several URLs
+    var reportData = {};
 
     // Search results from /search.php will not have link/indicator. There is no easy way to get the search query value either.
     if (window.location.pathname != "/search.php") {
