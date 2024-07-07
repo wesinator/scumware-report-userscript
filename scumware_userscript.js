@@ -78,7 +78,7 @@ function scumwareReportData() {
                         if (text.endsWith("..."))
                             urlObject.url_partial = text;
                         else
-                            urlObject.url = text;
+                            urlObject.url = text.replace('\n', '');
                         break;
                     case 2:
                         urlObject.md5 = text;
