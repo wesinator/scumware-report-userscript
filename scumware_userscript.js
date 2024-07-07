@@ -58,7 +58,6 @@ function scumwareReportData() {
             date: "",
 
             url: "",
-            url_partial: "", // for partial '...' URLs given in default scumware report page
             md5: "",
             ip: "",
             country: "",
@@ -76,6 +75,7 @@ function scumwareReportData() {
                         urlObject.date = text;
                         break;
                     case 1:
+                        // for partial '...' URLs given in default scumware report page
                         if (text.endsWith("..."))
                             urlObject.url_partial = text;
                         else
